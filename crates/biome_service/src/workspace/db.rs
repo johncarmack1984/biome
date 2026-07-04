@@ -4,7 +4,7 @@ use biome_languages::DocumentFileSource;
 use biome_parser::AnyParse;
 use biome_rowan::SendNode;
 use biome_workspace_db::{ParsedSourceUpdateMode, SharedWorkspaceDb, WorkspaceDb};
-use camino::{Utf8Path, Utf8PathBuf};
+use camino::Utf8Path;
 use parking_lot::Mutex;
 
 use crate::embed::EmbedContent;
@@ -107,7 +107,11 @@ impl DbState {
     }
 
     #[cfg(feature = "module_graph")]
-    pub(crate) fn insert_module(&self, path: Utf8PathBuf, module: biome_module_graph::ModuleInfo) {
+    pub(crate) fn insert_module(
+        &self,
+        path: camino::Utf8PathBuf,
+        module: biome_module_graph::ModuleInfo,
+    ) {
         match &self.storage {
             DbStorage::Shared(shared_db) => shared_db.fork().insert_module(path, module),
             DbStorage::Owned(db) => db.lock().insert_module(path, module),
