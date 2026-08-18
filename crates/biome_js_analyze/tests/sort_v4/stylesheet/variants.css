@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@custom-variant hocus (&:hover, &:focus);
+@custom-variant any-hover (@media (any-hover: hover));
+@custom-variant theme-midnight {
+	&:where([data-theme="midnight"] *) {
+		@slot;
+	}
+}
+/* overriding a builtin variant keeps its order */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant hover (&:hover);

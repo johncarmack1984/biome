@@ -1,0 +1,19 @@
+---
+source: crates/biome_js_analyze/tests/sort_v4_test.rs
+expression: rendered
+input_file: crates/biome_js_analyze/tests/sort_v4/stylesheet/variants.jsonc
+---
+input:  hocus:p-2 hover:p-3 p-1 any-hover:p-4 theme-midnight:p-5 focus:p-6
+sorted: p-1 hover:p-3 focus:p-6 hocus:p-2 any-hover:p-4 theme-midnight:p-5
+---
+input:  theme-midnight:p-5 any-hover:p-4 hocus:p-2 p-1
+sorted: p-1 hocus:p-2 any-hover:p-4 theme-midnight:p-5
+---
+input:  hocus:sm:p-2 sm:hocus:p-3 sm:p-4 hocus:p-1 p-0
+sorted: p-0 sm:p-4 hocus:p-1 hocus:sm:p-2 sm:hocus:p-3
+---
+input:  group-hocus:p-2 group-hover:p-3 p-1
+sorted: p-1 group-hover:p-3 group-hocus:p-2
+---
+input:  dark:p-2 hover:p-3 sm:p-4 p-1 dark:hover:p-5 hover:dark:p-6
+sorted: p-1 hover:p-3 sm:p-4 dark:p-2 dark:hover:p-5 hover:dark:p-6

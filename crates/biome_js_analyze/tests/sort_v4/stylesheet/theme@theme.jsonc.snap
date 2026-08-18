@@ -1,0 +1,43 @@
+---
+source: crates/biome_js_analyze/tests/sort_v4_test.rs
+expression: rendered
+input_file: crates/biome_js_analyze/tests/sort_v4/stylesheet/theme.jsonc
+---
+input:  3xl:p-8 2xl:p-6 xs:p-2 sm:p-4 p-1 max-3xl:p-9 max-xs:p-3 min-3xl:p-7
+sorted: p-1 max-3xl:p-9 max-xs:p-3 xs:p-2 sm:p-4 2xl:p-6 3xl:p-8 min-3xl:p-7
+---
+input:  @8xl:p-8 @7xl:p-6 @sm:p-4 p-1 @max-8xl:p-9
+sorted: p-1 @max-8xl:p-9 @sm:p-4 @7xl:p-6 @8xl:p-8
+---
+input:  bg-brand bg-brand-light bg-red-500 p-4 text-brand
+sorted: bg-brand bg-brand-light bg-red-500 p-4 text-brand
+---
+input:  p-huge m-huge w-huge p-4
+sorted: m-huge w-huge p-4 p-huge
+---
+input:  text-huge text-lg text-huge/tight p-4
+sorted: p-4 text-huge text-huge/tight text-lg
+---
+input:  font-display font-sans font-heavy p-4
+sorted: p-4 font-display font-sans font-heavy
+---
+input:  rounded-pill rounded-lg shadow-glow shadow-lg p-4
+sorted: rounded-lg rounded-pill p-4 shadow-glow shadow-lg
+---
+input:  animate-wiggle animate-spin ease-snappy ease-in p-4
+sorted: animate-spin animate-wiggle p-4 ease-in ease-snappy
+---
+input:  tracking-widest-2 tracking-wide leading-tight-2 leading-tight p-4
+sorted: p-4 leading-tight leading-tight-2 tracking-wide tracking-widest-2
+---
+input:  aspect-golden aspect-square blur-tiny blur-sm perspective-far perspective-near p-4
+sorted: aspect-golden aspect-square p-4 blur-sm blur-tiny perspective-far perspective-near
+---
+input:  inset-shadow-deep inset-shadow-sm drop-shadow-glow drop-shadow-lg text-shadow-glow text-shadow-sm p-4
+sorted: p-4 inset-shadow-deep inset-shadow-sm drop-shadow-glow drop-shadow-lg text-shadow-glow text-shadow-sm
+---
+input:  bg-hero bg-none p-4
+sorted: bg-hero bg-none p-4
+---
+input:  bg-nope p-4 text-nope
+sorted: bg-nope text-nope p-4

@@ -1,0 +1,20 @@
+[
+	// custom breakpoints sort by their length among the builtins
+	"3xl:p-8 2xl:p-6 xs:p-2 sm:p-4 p-1 max-3xl:p-9 max-xs:p-3 min-3xl:p-7",
+	"@8xl:p-8 @7xl:p-6 @sm:p-4 p-1 @max-8xl:p-9",
+
+	// theme keys make otherwise-unknown values valid
+	"bg-brand bg-brand-light bg-red-500 p-4 text-brand",
+	"p-huge m-huge w-huge p-4",
+	"text-huge text-lg text-huge/tight p-4",
+	"font-display font-sans font-heavy p-4",
+	"rounded-pill rounded-lg shadow-glow shadow-lg p-4",
+	"animate-wiggle animate-spin ease-snappy ease-in p-4",
+	"tracking-widest-2 tracking-wide leading-tight-2 leading-tight p-4",
+	"aspect-golden aspect-square blur-tiny blur-sm perspective-far perspective-near p-4",
+	"inset-shadow-deep inset-shadow-sm drop-shadow-glow drop-shadow-lg text-shadow-glow text-shadow-sm p-4",
+	"bg-hero bg-none p-4",
+
+	// values the theme does not have stay unknown
+	"bg-nope p-4 text-nope"
+]

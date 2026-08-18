@@ -1,0 +1,42 @@
+---
+source: crates/biome_js_analyze/tests/spec_tests.rs
+expression: component.jsx
+---
+# Input
+```jsx
+/* Sorted with the project's stylesheet: custom utilities, theme keys, breakpoints and variants are known. */
+<>
+	<div class="p-4 center-flex bg-brand tab-github dark:p-2 3xl:p-8 2xl:p-6 unknown-class" />
+	<div class="unknown-class center-flex bg-brand p-4 tab-github 2xl:p-6 3xl:p-8 dark:p-2" />
+</>;
+
+```
+
+# Diagnostics
+```
+component.jsx:3:13 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i These CSS classes should be sorted.
+  
+    1 │ /* Sorted with the project's stylesheet: custom utilities, theme keys, breakpoints and variants are known. */
+    2 │ <>
+  > 3 │ 	<div class="p-4 center-flex bg-brand tab-github dark:p-2 3xl:p-8 2xl:p-6 unknown-class" />
+      │ 	           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 	<div class="unknown-class center-flex bg-brand p-4 tab-github 2xl:p-6 3xl:p-8 dark:p-2" />
+    5 │ </>;
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Sort the classes.
+  
+    1 1 │   /* Sorted with the project's stylesheet: custom utilities, theme keys, breakpoints and variants are known. */
+    2 2 │   <>
+    3   │ - → <div·class="p-4·center-flex·bg-brand·tab-github·dark:p-2·3xl:p-8·2xl:p-6·unknown-class"·/>
+      3 │ + → <div·class="unknown-class·center-flex·bg-brand·p-4·tab-github·2xl:p-6·3xl:p-8·dark:p-2"·/>
+    4 4 │     <div class="unknown-class center-flex bg-brand p-4 tab-github 2xl:p-6 3xl:p-8 dark:p-2" />
+    5 5 │   </>;
+  
+
+```

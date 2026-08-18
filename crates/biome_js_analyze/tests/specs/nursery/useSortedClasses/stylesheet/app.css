@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@utility center-flex {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@utility tab-* {
+	tab-size: --value(--tab-size-*, integer);
+}

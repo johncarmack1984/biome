@@ -1,0 +1,35 @@
+[
+	// static custom utilities take their place by property order
+	"content-auto flex p-4",
+	"p-4 center-flex hidden",
+	"stack p-4 flex gap-2",
+	"hoverable p-4 text-red-500 opacity-50",
+	"btn p-4 px-2 rounded-lg",
+	"flex gap-4 block p-4",
+	// unknown classes stay in front, in order
+	"foo center-flex bar p-4",
+
+	// custom utilities take variants like any other
+	"hover:center-flex center-flex md:content-auto p-2",
+	"center-flex! p-4",
+
+	// functional custom utilities
+	"tab-4 p-4 tab-github tab-[8] tab-inherit",
+	"tab-4 tab-1.5 tab-foo p-4",
+	"tab-4/2 p-4",
+	// `text-shadow-*` overrides the builtin: the builtin still compiles,
+	// so a modifier the custom block does not take (`/8`) still places
+	// the class. (An arbitrary value with an opacity modifier is a
+	// preset gap shared with the base corpus, so `/8` is not paired with
+	// a plain arbitrary value here.)
+	"text-shadow-[0_1px_0_#000] p-4 text-shadow-[0_1px_0_#000]/loose",
+	"text-shadow-[0_2px_0_#000]/8 p-4",
+	"opacity-50% opacity-faint opacity-auto opacity-50 p-4",
+	"my-thing-4 my-thing-1.5 my-thing-foo p-4",
+	"my-thing-4 hover:my-thing-2 p-4",
+
+	// modifier-only utility: `tint-brand` (no modifier) drops its only
+	// declaration but still compiles empty and sorts last; `tint-brand/brand`
+	// resolves the modifier and sorts by color; `tint-brand/50` is invalid.
+	"tint-brand tint-brand/brand tint-brand/50 flex p-4 text-red-500"
+]

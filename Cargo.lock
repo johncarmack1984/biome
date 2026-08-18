@@ -1989,9 +1989,12 @@ version = "0.1.0"
 dependencies = [
  "biome_analyze",
  "biome_console",
+ "biome_css_parser",
+ "biome_css_syntax",
  "biome_diagnostics",
  "biome_html_syntax",
  "biome_js_syntax",
+ "biome_languages",
  "biome_parser",
  "biome_rowan",
  "biome_string_case",

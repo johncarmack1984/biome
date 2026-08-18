@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+	--breakpoint-3xl: 120rem;
+	--breakpoint-xs: 30rem;
+	--container-8xl: 96rem;
+	--color-brand: #3b82f6;
+	--color-brand-light: #93c5fd;
+	--spacing-huge: 10rem;
+	--text-huge: 6rem;
+	--text-huge--line-height: 1;
+	--font-display: "Satoshi", sans-serif;
+	--radius-pill: 9999px;
+	--shadow-glow: 0 0 20px #3b82f6;
+	--animate-wiggle: wiggle 1s ease-in-out infinite;
+	--ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+	--tracking-widest-2: 0.2em;
+	--leading-tight-2: 1.1;
+	--font-weight-heavy: 900;
+	--aspect-golden: 1.618;
+	--blur-tiny: 1px;
+	--perspective-far: 2000px;
+	--inset-shadow-deep: inset 0 4px 8px #000;
+	--drop-shadow-glow: 0 0 10px #fff;
+	--text-shadow-glow: 0 0 4px #fff;
+	--background-image-hero: url(/hero.png);
+}

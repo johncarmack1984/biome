@@ -422,6 +422,19 @@ impl<'r> PendingSortKey<'r> {
     }
 }
 
+/// The signature and declaration count Tailwind sorts `candidate` by,
+/// ignoring its variants; `None` when the utility does not compile. The
+/// stylesheet extractor uses this to expand `@apply` inside `@utility`.
+pub(super) fn utility_placement(
+    candidate: &AnyTwFullCandidate,
+    registry: &TailwindRegistry,
+) -> Option<(Signature, u8)> {
+    let AnyTwFullCandidate::TwFullCandidate(node) = candidate else {
+        return None;
+    };
+    candidate_placement(node, registry)
+}
+
 fn candidate_placement(
     node: &TwFullCandidate,
     registry: &TailwindRegistry,

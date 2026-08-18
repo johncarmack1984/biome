@@ -1,0 +1,58 @@
+---
+source: crates/biome_js_analyze/tests/sort_v4_test.rs
+expression: rendered
+input_file: crates/biome_js_analyze/tests/sort_v4/stylesheet/custom-utilities.jsonc
+---
+input:  content-auto flex p-4
+sorted: flex p-4 content-auto
+---
+input:  p-4 center-flex hidden
+sorted: center-flex hidden p-4
+---
+input:  stack p-4 flex gap-2
+sorted: flex stack gap-2 p-4
+---
+input:  hoverable p-4 text-red-500 opacity-50
+sorted: p-4 hoverable text-red-500 opacity-50
+---
+input:  btn p-4 px-2 rounded-lg
+sorted: btn rounded-lg p-4 px-2
+---
+input:  flex gap-4 block p-4
+sorted: flex block gap-4 p-4
+---
+input:  foo center-flex bar p-4
+sorted: foo bar center-flex p-4
+---
+input:  hover:center-flex center-flex md:content-auto p-2
+sorted: center-flex p-2 hover:center-flex md:content-auto
+---
+input:  center-flex! p-4
+sorted: center-flex! p-4
+---
+input:  tab-4 p-4 tab-github tab-[8] tab-inherit
+sorted: p-4 tab-4 tab-[8] tab-github tab-inherit
+---
+input:  tab-4 tab-1.5 tab-foo p-4
+sorted: tab-1.5 tab-foo p-4 tab-4
+---
+input:  tab-4/2 p-4
+sorted: tab-4/2 p-4
+---
+input:  text-shadow-[0_1px_0_#000] p-4 text-shadow-[0_1px_0_#000]/loose
+sorted: p-4 text-shadow-[0_1px_0_#000]/loose text-shadow-[0_1px_0_#000]
+---
+input:  text-shadow-[0_2px_0_#000]/8 p-4
+sorted: p-4 text-shadow-[0_2px_0_#000]/8
+---
+input:  opacity-50% opacity-faint opacity-auto opacity-50 p-4
+sorted: opacity-50% p-4 opacity-50 opacity-auto opacity-faint
+---
+input:  my-thing-4 my-thing-1.5 my-thing-foo p-4
+sorted: my-thing-foo my-thing-1.5 my-thing-4 p-4
+---
+input:  my-thing-4 hover:my-thing-2 p-4
+sorted: my-thing-4 p-4 hover:my-thing-2
+---
+input:  tint-brand tint-brand/brand tint-brand/50 flex p-4 text-red-500
+sorted: tint-brand/50 flex p-4 text-red-500 tint-brand/brand tint-brand

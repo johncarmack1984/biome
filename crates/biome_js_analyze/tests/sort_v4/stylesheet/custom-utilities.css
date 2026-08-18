@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* static utilities: propertySort from their declarations */
+@utility content-auto {
+	content-visibility: auto;
+}
+
+@utility center-flex {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* a `--tw-sort` hint replaces the position of everything after it;
+   custom properties still count */
+@utility stack {
+	--tw-sort: gap;
+	--stack-space: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: var(--stack-space);
+}
+
+/* nested rules count too */
+@utility hoverable {
+	color: red;
+	&:hover {
+		color: blue;
+		opacity: 0.5;
+	}
+}
+
+/* `@apply` inlines the applied utilities' declarations */
+@utility btn {
+	@apply px-4 py-2 rounded font-medium;
+	cursor: pointer;
+}
+
+/* overriding a builtin static utility */
+@utility flex {
+	display: flex;
+	gap: 1rem;
+}
+
+/* functional utilities */
+@utility tab-* {
+	tab-size: --value(--tab-size-*, integer, [integer], "inherit");
+}
+
+@utility text-shadow-* {
+	text-shadow: --value([*]);
+	line-height: --modifier(--leading-*, [length]);
+}
+
+@utility opacity-* {
+	opacity: --value([percentage], --opacity-*, "auto");
+}
+
+@utility my-thing-* {
+	margin: --value(number);
+	padding: --value(--spacing-*);
+}
+
+/* modifier-only functional utility: a candidate with no modifier drops
+   the declaration but still compiles (empty), sorting last */
+@utility tint-* {
+	color: --modifier(--tint-*);
+}
+
+@theme {
+	--tab-size-github: 8;
+	--opacity-faint: 20%;
+	--tint-brand: #f00;
+}

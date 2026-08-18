@@ -1,12 +1,21 @@
 // `sort` owns only the engine-independent diagnostic-range and
 // template-literal helpers; the class sorting itself lives in
-// `biome_tailwind_logic::sorted_classes`, shared with the HTML rule.
+// `biome_tailwind_logic::sorted_classes`, shared with the HTML rule, and
+// `stylesheet` resolves the project's stylesheet to the `TailwindRegistry`
+// it sorts against.
 mod sort;
+mod stylesheet;
 
-use self::sort::{TemplateLiteralSpaceContext, get_sort_class_name_range};
+use self::{
+    sort::TemplateLiteralSpaceContext, sort::get_sort_class_name_range,
+    stylesheet::tailwind_registry_for_stylesheet,
+};
 use crate::JsRuleAction;
+use crate::services::database::ResolvedImports;
 use crate::shared::any_class_string_like::AnyClassStringLike;
-use biome_analyze::{Ast, FixKind, Rule, RuleDiagnostic, context::RuleContext, declare_lint_rule};
+use biome_analyze::{
+    FixKind, Rule, RuleDiagnostic, RuleDomain, context::RuleContext, declare_lint_rule,
+};
 use biome_console::markup;
 use biome_js_factory::make::{
     js_literal_member_name, js_string_literal, js_string_literal_expression,
@@ -38,7 +47,7 @@ declare_lint_rule! {
     /// Notably, keep in mind that the following features are not supported yet:
     ///
     /// - The `prefix` option and Tailwind CSS v3 configuration files.
-    /// - Utilities, variants, and theme values your project adds, whether in CSS (`@theme`, `@utility`, `@custom-variant`) or through JavaScript (`@plugin`, `@config`), which Biome cannot execute.
+    /// - Utilities and variants added by JavaScript (`@plugin`, `@config`), which Biome cannot execute.
     ///
     /// Please don't report issues about these features.
     /// :::
@@ -105,17 +114,37 @@ declare_lint_rule! {
     ///
     /// ### Sort-related
     ///
-    /// :::caution
-    /// At the moment, this rule does not support customizing the sort options. Instead, the default Tailwind CSS v4 theme is built in.
-    /// :::
+    /// The sort order is configured through the top-level `tailwind` configuration rather than through rule options.
+    ///
+    /// #### `tailwind.stylesheet`
+    ///
+    /// Path to the project's Tailwind CSS entry stylesheet, relative to the root of the package that contains the linted file (the directory of its nearest `package.json`, or the working directory when there is none). This mirrors the `tailwindStylesheet` option of `prettier-plugin-tailwindcss`.
+    ///
+    /// When set, the rule reads the `@theme`, `@utility`, and `@custom-variant` directives of that file and of the stylesheets it `@import`s, and sorts with them:
+    ///
+    /// - `@theme` keys make values valid (`bg-brand` for `--color-brand`), add breakpoints (`3xl:` for `--breakpoint-3xl`) and container sizes, and `--color-*: initial` style resets drop Tailwind's defaults.
+    /// - `@utility` registrations place custom classes by the properties they set, the way Tailwind orders them; functional utilities (`@utility tab-*`) accept the values their `--value()` and `--modifier()` calls describe.
+    /// - `@custom-variant` registrations sort after Tailwind's own variants, in the order they are declared; redefining a builtin (`@custom-variant dark (…)`) keeps its place.
+    ///
+    /// The stylesheet must be part of the project Biome scans (it cannot be excluded through `files.includes`), and the rule enables the CSS parser's Tailwind syntax for it regardless of `css.parser.tailwindDirectives`. If the file cannot be found, the rule falls back to Tailwind's defaults.
+    ///
+    /// ```json
+    /// {
+    ///     "tailwind": {
+    ///         "stylesheet": "src/app.css"
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// Without it, the rule sorts with Tailwind's default v4 theme built in.
     ///
     /// ## Differences with [Prettier](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)
     ///
-    /// The main key difference is that Tailwind CSS and its Prettier plugin load your stylesheet through Tailwind itself, executing any JavaScript it pulls in (`@plugin`, `@config`, and for v3 `tailwind.config.js`), which Biome doesn't do. Instead, Biome sorts with Tailwind's default theme built in. The trade-offs are explained below.
+    /// The main key difference is that Tailwind CSS and its Prettier plugin load your stylesheet through Tailwind itself, executing any JavaScript it pulls in (`@plugin`, `@config`, and for v3 `tailwind.config.js`), which Biome doesn't do. Instead, Biome sorts with Tailwind's default theme built in and reads the CSS-declared parts of your stylesheet through the top-level `tailwind.stylesheet` configuration. The trade-offs are explained below.
     ///
-    /// ### Custom additions are not known
+    /// ### Only CSS-declared additions are read
     ///
-    /// The rule knows the utilities, variants, breakpoints, and theme values that Tailwind CSS v4 ships with, and orders them the way Tailwind does. Anything your project adds — `@theme` keys, `@utility` and `@custom-variant` registrations, `@plugin`, `@config`, or a v3 config file — and the `prefix` option remain unknown to it, and classes it does not recognize are left where the Prettier plugin would put them: at the front, in their original order.
+    /// The rule knows the utilities, variants, breakpoints, and theme values that Tailwind CSS v4 ships with, and orders them the way Tailwind does. With `tailwind.stylesheet` configured it also knows what your CSS declares. Anything added by JavaScript — `@plugin`, `@config`, or a v3 config file — and the `prefix` option remain unknown to it, and classes it does not recognize are left where the Prettier plugin would put them: at the front, in their original order.
     ///
     /// ### Whitespace is collapsed
     ///
@@ -130,6 +159,7 @@ declare_lint_rule! {
         recommended: false,
         fix_kind: FixKind::Unsafe,
         issue_number: Some("1274"),
+        domains: &[RuleDomain::Project],
     }
 }
 
@@ -174,7 +204,7 @@ fn sort_class_name_v4(
 }
 
 impl Rule for UseSortedClasses {
-    type Query = Ast<AnyClassStringLike>;
+    type Query = ResolvedImports<AnyClassStringLike>;
     type State = Box<str>;
     type Signals = Option<Self::State>;
     type Options = UseSortedClassesOptions;
@@ -186,8 +216,9 @@ impl Rule for UseSortedClasses {
         if node.should_visit(options)?
             && let Some(value) = node.value()
         {
+            let registry = stylesheet_registry(ctx).unwrap_or(&EMPTY_REGISTRY);
             let template_ctx = sort::get_template_literal_space_context(node);
-            let sorted_value: String = sort_class_name_v4(&value, &template_ctx, &EMPTY_REGISTRY);
+            let sorted_value: String = sort_class_name_v4(&value, &template_ctx, registry);
             if sorted_value.is_empty() {
                 return None;
             }
@@ -273,3 +304,24 @@ impl Rule for UseSortedClasses {
     }
 }
 
+/// The registry for `tailwind.stylesheet`, or `None` when it is unset or
+/// names a file the workspace has not indexed. The path is relative to
+/// the package root of the linted file (falling back to the working
+/// directory), and the registry itself is a memoized query over the
+/// module graph, so this costs a path join and a lookup per class
+/// attribute.
+fn stylesheet_registry<'a>(ctx: &'a RuleContext<UseSortedClasses>) -> Option<&'a TailwindRegistry> {
+    let stylesheet = ctx.tailwind().stylesheet()?;
+
+    let file_path = ctx.file_path();
+    let package_dir = ctx
+        .project_layout()
+        .find_node_manifest_for_path(file_path)
+        .map(|(dir, _)| dir)
+        .or_else(|| ctx.working_directory().map(|p| p.to_path_buf()))?;
+    let css_path = package_dir.join(stylesheet);
+
+    let db = ctx.db();
+    let module = db.module_for_path(&css_path)?;
+    Some(tailwind_registry_for_stylesheet(db, module))
+}

@@ -1,0 +1,27 @@
+[
+	// ─── shadcn/ui components on the template's globals.css ────────
+	// `bg-card`, `text-muted-foreground`, `rounded-xl`, `border-input`
+	// resolve through `@theme inline`; `dark:` is a `@custom-variant`
+	// that overrides the builtin and keeps its order.
+
+	// Card
+	"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+	"rounded-xl border bg-card text-card-foreground shadow-sm py-6 gap-6 flex-col flex",
+
+	// Button variants
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+	"bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+	"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+	"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+	"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+
+	// Input
+	"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+
+	// Sidebar
+	"bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col",
+	"text-sidebar-foreground/70 ring-sidebar-ring rounded-md",
+
+	// dark: keeps the builtin order relative to breakpoints and other variants
+	"dark:p-2 sm:p-4 hover:p-3 p-1 md:dark:p-5 dark:hover:p-6"
+]

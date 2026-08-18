@@ -287,9 +287,11 @@ fn css_importers_and_parent_nodes_are_sorted_and_deduplicated() {
 
 fn resolve_css_module_kind_for_test(fs: &MemoryFileSystem, path: &str) -> ModuleInfoKind {
     let paths = [BiomePath::new(path)];
-    let (_, root) = biome_test_utils::get_css_added_paths(fs, &paths)
-        .pop()
-        .unwrap();
+    let (_, root) = biome_test_utils::get_css_added_paths(fs, &paths, |_| {
+        biome_css_parser::CssParserOptions::default()
+    })
+    .pop()
+    .unwrap();
     let (info, _, _) = resolve_css_module(
         root,
         &paths[0],

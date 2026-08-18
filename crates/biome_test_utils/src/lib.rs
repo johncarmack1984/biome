@@ -127,6 +127,7 @@ pub fn create_analyzer_options<L: ServiceLanguage>(
                 ),
             )
             .with_file_path(input_file)
+            .with_working_directory(working_directory)
     }
 }
 
@@ -294,8 +295,11 @@ pub fn module_graph_for_test_file(
     #[cfg(feature = "lang_css")]
     {
         let css_paths = get_css_like_paths_in_dir(&dir);
-        let css_roots = get_css_added_paths(&fs, &css_paths);
+        let css_roots = get_css_added_paths(&fs, &css_paths, css_parser_options_for_dir);
         for (path, root) in css_roots {
+            // Rules that read another file's CSS through the database
+            // (`parsed_source_for_path`) need the parse registered
+            // alongside the module, as the workspace does when indexing.
             let DocumentFileSource::Css(file_source) =
                 DocumentFileSource::from_path(path.as_path(), false)
             else {
@@ -349,7 +353,7 @@ pub fn module_graph_for_css_test_file(
     let fs = OsFileSystem::new(dir.clone());
 
     let css_paths = get_css_like_paths_in_dir(Utf8Path::new(&dir));
-    let css_roots = get_css_added_paths(&fs, &css_paths);
+    let css_roots = get_css_added_paths(&fs, &css_paths, css_parser_options_for_dir);
     for (path, root) in css_roots {
         let DocumentFileSource::Css(file_source) =
             DocumentFileSource::from_path(path.as_path(), false)
@@ -565,9 +569,43 @@ pub fn get_added_js_paths<'a>(
 
 /// Loads and parses files from the file system to pass them to service methods.
 #[cfg(feature = "lang_css")]
+/// The CSS parser options for stylesheets in `dir`: Tailwind directives
+/// are enabled when any `*.options.json` beside them turns on
+/// `css.parser.tailwindDirectives`, so a spec's stylesheets index the way
+/// the workspace would under that spec's configuration.
+pub fn css_parser_options_for_dir(dir: &Utf8Path) -> CssParserOptions {
+    let enables_tailwind_directives = |options_file: Utf8PathBuf| {
+        let fs = OsFileSystem::new(dir.to_path_buf());
+        let path_hint = ConfigurationPathHint::FromUser(options_file);
+        load_configuration(&fs, path_hint).is_ok_and(|configuration| {
+            configuration
+                .resolved_configuration()
+                .css
+                .as_ref()
+                .and_then(|css| css.parser.as_ref())
+                .and_then(|parser| parser.tailwind_directives)
+                .is_some_and(|enabled| enabled.into())
+        })
+    };
+    let enabled = std::fs::read_dir(dir).is_ok_and(|entries| {
+        entries
+            .flatten()
+            .filter_map(|entry| Utf8PathBuf::try_from(entry.path()).ok())
+            .filter(|path| path.as_str().ends_with(".options.json"))
+            .any(enables_tailwind_directives)
+    });
+    if enabled {
+        CssParserOptions::default().allow_tailwind_directives()
+    } else {
+        CssParserOptions::default()
+    }
+}
+
+#[cfg(feature = "lang_css")]
 pub fn get_css_added_paths<'a>(
     fs: &dyn FileSystem,
     paths: &'a [BiomePath],
+    options_for_dir: impl Fn(&Utf8Path) -> CssParserOptions,
 ) -> Vec<(&'a BiomePath, AnyCssRoot)> {
     paths
         .iter()
@@ -578,10 +616,14 @@ pub fn get_css_added_paths<'a>(
                 return None;
             };
             let root = fs.read_file_from_path(path).ok().map(|content| {
+                let options = path
+                    .as_path()
+                    .parent()
+                    .map_or_else(CssParserOptions::default, &options_for_dir);
                 let options = if file_source.is_css_modules() {
-                    CssParserOptions::default().allow_css_modules()
+                    options.allow_css_modules()
                 } else {
-                    CssParserOptions::default()
+                    options
                 };
                 let parsed = biome_css_parser::parse_css(&content, file_source, options);
                 let diagnostics = parsed.diagnostics();

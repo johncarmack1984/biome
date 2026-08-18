@@ -142,7 +142,9 @@ impl AnalyzerServicesBuilder {
             db.insert_module(path.as_path().to_path_buf(), md);
         }
 
-        let css_added_paths = get_css_added_paths(&fs, &css_paths);
+        let css_added_paths = get_css_added_paths(&fs, &css_paths, |_| {
+            biome_css_parser::CssParserOptions::default()
+        });
         for (path, root) in css_added_paths {
             let (module_info, _, _) =
                 resolve_css_module(root, path, &fs, &layout, &path_info_cache);

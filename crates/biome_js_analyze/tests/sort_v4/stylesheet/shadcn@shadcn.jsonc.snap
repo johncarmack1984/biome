@@ -1,0 +1,37 @@
+---
+source: crates/biome_js_analyze/tests/sort_v4_test.rs
+expression: rendered
+input_file: crates/biome_js_analyze/tests/sort_v4/stylesheet/shadcn.jsonc
+---
+input:  bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm
+sorted: flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm
+---
+input:  rounded-xl border bg-card text-card-foreground shadow-sm py-6 gap-6 flex-col flex
+sorted: flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm
+---
+input:  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive
+sorted: inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4
+---
+input:  bg-primary text-primary-foreground shadow-xs hover:bg-primary/90
+sorted: bg-primary text-primary-foreground shadow-xs hover:bg-primary/90
+---
+input:  border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50
+sorted: border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50
+---
+input:  bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60
+sorted: bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40
+---
+input:  hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50
+sorted: hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50
+---
+input:  file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
+sorted: flex h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30
+---
+input:  bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col
+sorted: flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground
+---
+input:  text-sidebar-foreground/70 ring-sidebar-ring rounded-md
+sorted: rounded-md text-sidebar-foreground/70 ring-sidebar-ring
+---
+input:  dark:p-2 sm:p-4 hover:p-3 p-1 md:dark:p-5 dark:hover:p-6
+sorted: p-1 hover:p-3 sm:p-4 dark:p-2 dark:hover:p-6 md:dark:p-5

@@ -66,6 +66,7 @@ phf                       = { workspace = true }
 regex                     = { workspace = true }
 roaring                   = "0.11.3"
 rustc-hash                = { workspace = true }
+salsa                     = { workspace = true }
 schemars                  = { workspace = true, optional = true }
 serde                     = { workspace = true, features = ["derive"] }
 smallvec                  = { workspace = true }
@@ -79,7 +80,6 @@ biome_service       = { path = "../biome_service" }
 biome_test_utils    = { path = "../biome_test_utils", features = ["html_embeds", "module_graph"] }
 criterion           = { package = "codspeed-criterion-compat", version = "=5.0.1" }
 insta               = { workspace = true, features = ["glob"] }
-salsa               = { workspace = true }
 tests_macros        = { path = "../tests_macros" }
 
 [build-dependencies]

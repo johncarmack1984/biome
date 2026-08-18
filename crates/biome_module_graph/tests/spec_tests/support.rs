@@ -55,7 +55,7 @@ pub fn add_css_modules(
     paths: &[BiomePath],
 ) {
     let path_info_cache = PathInfoCache::default();
-    for (path, root) in get_css_added_paths(fs, paths) {
+    for (path, root) in get_css_added_paths(fs, paths, |_| CssParserOptions::default()) {
         let (info, _, _) = resolve_css_module(root, path, fs, layout, &path_info_cache);
         db.update_or_insert_module(path.as_path().to_path_buf(), ModuleInfoKind::Css(info));
     }

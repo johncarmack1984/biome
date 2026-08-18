@@ -5,16 +5,19 @@
 //! [`sort_v4`] holds the sorter; the preset it sorts against is the
 //! generated [`tailwind_preset_v4`] snapshot, and a project's own
 //! utilities, variants, and theme reach it through a
-//! [`TailwindRegistry`].
+//! [`TailwindRegistry`], which [`tailwind_css_extract`] fills from the
+//! stylesheet's `@theme`, `@utility`, and `@custom-variant` directives.
 
 mod arbitrary_value_match;
 pub mod sort_v4;
 mod sort_v4_variants;
+pub mod tailwind_css_extract;
 mod tailwind_preset_v4;
 mod tailwind_preset_v4_types;
 mod tailwind_registry;
 
 pub use sort_v4::sort_class_list;
+pub use tailwind_css_extract::extract_tailwind_registry;
 pub use tailwind_registry::{EMPTY_REGISTRY, TailwindRegistry};
 
 use biome_tailwind_parser::parse_tailwind;

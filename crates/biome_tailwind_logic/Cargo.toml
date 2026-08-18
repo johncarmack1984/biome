@@ -12,6 +12,7 @@ categories.workspace = true
 [dependencies]
 biome_analyze          = { workspace = true }
 biome_console          = { workspace = true }
+biome_css_syntax       = { workspace = true }
 biome_diagnostics      = { workspace = true }
 biome_html_syntax      = { workspace = true }
 biome_js_syntax        = { workspace = true }
@@ -26,7 +27,9 @@ rustc-hash             = { workspace = true }
 smallvec               = { workspace = true }
 
 [dev-dependencies]
-insta = { workspace = true }
+biome_css_parser = { path = "../biome_css_parser" }
+biome_languages  = { path = "../biome_languages" }
+insta            = { workspace = true }
 
 [lints]
 workspace = true
