@@ -304,7 +304,7 @@ define_categories! {
     "lint/nursery/useReactNamingConvention": "https://biomejs.dev/linter/rules/use-react-naming-convention",
     "lint/nursery/useRegexpExec": "https://biomejs.dev/linter/rules/use-regexp-exec",
     "lint/nursery/useSingleTopLevelHeading": "https://biomejs.dev/linter/rules/use-single-top-level-heading",
-    "lint/nursery/useSortedClasses": "https://biomejs.dev/linter/rules/use-sorted-classes",
+    "lint/nursery/useTailwindSortedClasses": "https://biomejs.dev/linter/rules/use-tailwind-sorted-classes",
     "lint/nursery/useStrictBooleanExpressions": "https://biomejs.dev/linter/rules/use-strict-boolean-expressions",
     "lint/nursery/useStringStartsEndsWith": "https://biomejs.dev/linter/rules/use-string-starts-ends-with",
     "lint/nursery/useSvelteKitRuneImports": "https://biomejs.dev/linter/rules/use-svelte-kit-rune-imports",

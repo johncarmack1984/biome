@@ -2455,11 +2455,6 @@ pub fn config_side_rule_options_types() -> Vec<(&'static str, &'static str, Type
         TypeId::of::<biome_rule_options::use_solid_for_component::UseSolidForComponentOptions>(),
     ));
     result.push((
-        "nursery",
-        "useSortedClasses",
-        TypeId::of::<biome_rule_options::use_sorted_classes::UseSortedClassesOptions>(),
-    ));
-    result.push((
         "style",
         "useSpreadOverApply",
         TypeId::of::<biome_rule_options::use_spread_over_apply::UseSpreadOverApplyOptions>(),
@@ -2496,6 +2491,13 @@ pub fn config_side_rule_options_types() -> Vec<(&'static str, &'static str, Type
         "useTailwindShorthandClasses",
         TypeId::of::<
             biome_rule_options::use_tailwind_shorthand_classes::UseTailwindShorthandClassesOptions,
+        >(),
+    ));
+    result.push((
+        "nursery",
+        "useTailwindSortedClasses",
+        TypeId::of::<
+            biome_rule_options::use_tailwind_sorted_classes::UseTailwindSortedClassesOptions,
         >(),
     ));
     result.push((
